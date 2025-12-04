@@ -25,7 +25,7 @@ app.post('/chat', async (req, res) => {
         
         console.log('📤 Llamando a Perplexity...');
         const response = await axios.post('https://api.perplexity.ai/chat/completions', {
-            model: 'llama-3.1-sonar-small-128k-online',
+            model: 'llama-3.1-sonar-small-128k-chat',
             messages: [
                 { role: 'system', content: systemPrompt || 'Responde breve en español.' },
                 { role: 'user', content: message }
