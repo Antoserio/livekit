@@ -10,10 +10,10 @@ app.use(express.json());
 app.post('/chat', async (req, res) => {
     try {
         console.log('📥 Request:', req.body);
-        const perplexityKey = process.env.PERPLEXITY_API_KEY;
+        const openaiKey = process.env.OPENAI_API_KEY;
         
-        if (!perplexityKey) {
-            console.error('❌ PERPLEXITY_API_KEY no configurada');
+        if (!openaiKey) {
+            console.error('❌ OPENAI_API_KEY no configurada');
             return res.status(500).json({ error: 'API key missing' });
         }
         
@@ -23,9 +23,9 @@ app.post('/chat', async (req, res) => {
             return res.status(400).json({ error: 'message required' });
         }
         
-        console.log('📤 Llamando a Perplexity...');
-        const response = await axios.post('https://api.perplexity.ai/chat/completions', {
-            model: 'llama-3.1-sonar-small-128k-online',
+        console.log('📤 Llamando a OpenAI...');
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: 'gpt-3.5-turbo',
             messages: [
                 { role: 'system', content: systemPrompt || 'Responde breve en español.' },
                 { role: 'user', content: message }
@@ -34,12 +34,12 @@ app.post('/chat', async (req, res) => {
             max_tokens: 150
         }, {
             headers: { 
-                'Authorization': `Bearer ${perplexityKey}`, 
+                'Authorization': `Bearer ${openaiKey}`, 
                 'Content-Type': 'application/json' 
             }
         });
         
-        console.log('✅ Respuesta de Perplexity recibida');
+        console.log('✅ Respuesta de OpenAI recibida');
         res.json({ response: response.data.choices[0].message.content });
     } catch (error) {
         console.error('❌ Error completo:', error.response?.data || error.message);
